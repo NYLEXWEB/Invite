@@ -95,26 +95,27 @@ export default function InvitationRenderer({
 
   return (
     <div 
-      className="w-full max-w-lg mx-auto rounded-3xl overflow-hidden shadow-2xl border border-gray-100 transition-all duration-300 relative bg-white gold-glow"
+      className="w-full max-w-lg mx-auto rounded-3xl overflow-hidden shadow-2xl border border-gray-200/60 transition-all duration-300 relative bg-white gold-glow"
       style={{ 
         backgroundColor, 
         backgroundImage: bgImage ? `url(${bgImage})` : 'none',
-        backgroundSize: 'cover',
+        backgroundSize: '100% 100%',
         backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         fontFamily: fontBody,
         color: secondaryColor
       }}
     >
       {/* Invitation/Greeting Contents */}
-      <div className="p-6 sm:p-8 text-center relative">
+      <div className="pt-3 px-5 pb-5 sm:pt-4 sm:px-6 sm:pb-6 text-center relative">
         
         {/* Floating badge */}
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center mb-3">
           <span 
             className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] uppercase tracking-widest font-semibold bg-opacity-10 border"
             style={{ 
               color: primaryColor, 
-              borderColor: `${primaryColor}30`,
+              borderColor: `${primaryColor}40`,
               backgroundColor: `${primaryColor}08`
             }}
           >
@@ -125,33 +126,33 @@ export default function InvitationRenderer({
 
         {/* Decorative Inner Border Box */}
         <div 
-          className={`p-6 sm:p-8 rounded-2xl ${getBorderClasses()}`}
+          className={`p-5 sm:p-6 rounded-2xl ${getBorderClasses()}`}
           style={borderStyleObj}
         >
           {userData.mode === 'wish' ? (
             /* =======================================
                GREETING / WISH CARD LAYOUT
                ======================================= */
-            <div className="space-y-6">
+            <div className="space-y-5">
               {/* Heading depending on type */}
               <div>
                 {serviceType === 'wedding' && (
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Congratulations On Your Wedding</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Congratulations On Your Wedding</h2>
                 )}
                 {serviceType === 'birthday' && (
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Happy Birthday!</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Happy Birthday!</h2>
                 )}
                 {serviceType === 'anniversary' && (
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Happy Anniversary!</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Happy Anniversary!</h2>
                 )}
                 {serviceType === 'housewarming' && (
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Congratulations on Your New Home</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Congratulations on Your New Home</h2>
                 )}
                 {serviceType === 'babyshower' && (
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Best Wishes on Your Baby Shower</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Best Wishes on Your Baby Shower</h2>
                 )}
                 {serviceType === 'engagement' && (
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Congratulations on Your Engagement</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Congratulations on Your Engagement</h2>
                 )}
                 <h1 
                   className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
@@ -161,17 +162,33 @@ export default function InvitationRenderer({
                 </h1>
               </div>
 
+              {/* Cover Image in Wish Mode */}
+              {imageSrc && (
+                <div className="flex justify-center my-3">
+                  <div 
+                    className="relative w-28 h-28 rounded-2xl overflow-hidden border p-1 bg-white shadow-md"
+                    style={{ borderColor: `${primaryColor}40` }}
+                  >
+                    <img 
+                      src={imageSrc} 
+                      alt="Greeting Visual" 
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* Wish Message */}
               <p 
-                className="my-5 text-sm leading-relaxed text-gray-500 font-light italic max-w-sm mx-auto"
+                className="my-4 text-sm leading-relaxed text-gray-800 font-normal italic max-w-[280px] mx-auto"
                 style={{ fontFamily: fontSub }}
               >
                 &ldquo;{userData.message || 'Wishing you a day filled with love, laughter, and beautiful memories. May this special milestone bring endless joy to your life!'}&rdquo;
               </p>
 
               {/* Signature Block */}
-              <div className="mt-8 pt-6 border-t border-gray-100/60 text-center">
-                <p className="text-[9px] uppercase tracking-widest text-gray-400 font-bold mb-1">With Warm Wishes From</p>
+              <div className="mt-6 pt-5 border-t border-gray-200/80 text-center">
+                <p className="text-[9px] uppercase tracking-widest text-gray-600 font-bold mb-1">With Warm Wishes From</p>
                 <p 
                   className="text-xl font-normal" 
                   style={{ fontFamily: fontHeader, color: primaryColor }}
@@ -179,7 +196,7 @@ export default function InvitationRenderer({
                   {userData.senderName || 'Your Friend'}
                 </p>
                 {userData.date && (
-                  <p className="text-[8px] text-gray-400 font-light mt-3 tracking-widest uppercase">
+                  <p className="text-[8px] text-gray-600 font-medium mt-2 tracking-widest uppercase">
                     {formatDate(userData.date)}
                   </p>
                 )}
@@ -193,13 +210,13 @@ export default function InvitationRenderer({
               {/* Main Headers depending on Service Type */}
               {serviceType === 'wedding' && (
                 <div className="space-y-3">
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">The Wedding of</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">The Wedding of</h2>
                   <h1 
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
                     {userData.groomName || 'Arjun'}
-                    <span className="block text-xl font-serif italic my-0.5 text-gray-400">&amp;</span>
+                    <span className="block text-xl font-serif italic my-0.5 text-gray-500">&amp;</span>
                     {userData.brideName || 'Meera'}
                   </h1>
                 </div>
@@ -207,14 +224,14 @@ export default function InvitationRenderer({
 
               {serviceType === 'birthday' && (
                 <div className="space-y-3">
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Celebrating</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Celebrating</h2>
                   <h1 
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
                     {userData.name || 'Jane Doe'}
                   </h1>
-                  <p className="text-sm font-light italic text-gray-500" style={{ fontFamily: fontSub }}>
+                  <p className="text-sm font-medium italic text-gray-700" style={{ fontFamily: fontSub }}>
                     Turning {userData.age || '—'} Years Old
                   </p>
                 </div>
@@ -222,14 +239,14 @@ export default function InvitationRenderer({
 
               {serviceType === 'anniversary' && (
                 <div className="space-y-3">
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Happy Anniversary</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Happy Anniversary</h2>
                   <h1 
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
                     {userData.coupleNames || 'Couple Names'}
                   </h1>
-                  <p className="text-sm font-light italic text-gray-500" style={{ fontFamily: fontSub }}>
+                  <p className="text-sm font-medium italic text-gray-700" style={{ fontFamily: fontSub }}>
                     Celebrating {userData.anniversaryYear || '—'} Years of Love
                   </p>
                 </div>
@@ -237,14 +254,14 @@ export default function InvitationRenderer({
 
               {serviceType === 'housewarming' && (
                 <div className="space-y-3">
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">New Beginnings</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">New Beginnings</h2>
                   <h1 
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
                     {userData.familyName || 'Family Name'}
                   </h1>
-                  <p className="text-sm font-light italic text-gray-500" style={{ fontFamily: fontSub }}>
+                  <p className="text-sm font-medium italic text-gray-700" style={{ fontFamily: fontSub }}>
                     Housewarming Celebration
                   </p>
                 </div>
@@ -252,14 +269,14 @@ export default function InvitationRenderer({
 
               {serviceType === 'babyshower' && (
                 <div className="space-y-3">
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Welcome Baby</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Welcome Baby</h2>
                   <h1 
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
                     {userData.parentNames || 'Parents'}
                   </h1>
-                  <p className="text-sm font-light italic text-gray-500" style={{ fontFamily: fontSub }}>
+                  <p className="text-sm font-medium italic text-gray-700" style={{ fontFamily: fontSub }}>
                     Baby Shower Celebration
                   </p>
                 </div>
@@ -267,52 +284,68 @@ export default function InvitationRenderer({
 
               {(serviceType === 'engagement' || serviceType === 'savethedate') && (
                 <div className="space-y-3">
-                  <h2 className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Save the Date</h2>
+                  <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Save the Date</h2>
                   <h1 
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
                     {userData.coupleNames || 'Couple Names'}
                   </h1>
-                  <p className="text-sm font-light italic text-gray-500" style={{ fontFamily: fontSub }}>
+                  <p className="text-sm font-medium italic text-gray-700" style={{ fontFamily: fontSub }}>
                     Engagement Announcement
                   </p>
                 </div>
               )}
 
+              {/* Cover Image in Event Mode */}
+              {imageSrc && (
+                <div className="flex justify-center my-4 animate-fade-in">
+                  <div 
+                    className="relative w-36 h-28 rounded-2xl overflow-hidden border p-1 bg-white shadow-md"
+                    style={{ borderColor: `${primaryColor}40` }}
+                  >
+                    <img 
+                      src={imageSrc} 
+                      alt="Event Cover" 
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* Invitation Message */}
               <p 
-                className="my-5 text-sm leading-relaxed text-gray-500 font-light italic max-w-sm mx-auto"
+                className="my-4 text-sm leading-relaxed text-gray-800 font-normal italic max-w-[280px] mx-auto"
                 style={{ fontFamily: fontSub }}
               >
                 &ldquo;{userData.message || 'You are cordially invited to celebrate this special milestone with us. Your presence would mean the world to our family.'}&rdquo;
               </p>
 
-              {/* Event Metadata (Date, Time, Venue) */}
-              <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col gap-3.5 text-xs text-gray-500 max-w-xs mx-auto">
+              {/* Centered Event Metadata (Date, Time, Venue) */}
+              <div className="mt-5 pt-4 border-t border-gray-200/80 flex flex-col gap-4 text-xs text-gray-700 max-w-[280px] mx-auto text-center items-center justify-center">
                 {/* Date */}
-                <div className="flex items-center gap-2.5">
-                  <Calendar className="w-4.5 h-4.5 shrink-0" style={{ color: primaryColor }} />
-                  <span className="font-light text-left">
-                    {formatDate(userData.date || userData.weddingDate)}
+                <div className="flex flex-col items-center gap-1">
+                  <Calendar className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
+                  <span className="font-medium tracking-wide">
+                    {formatDate(userData.date || userData.weddingDate) || 'Date to be announced'}
                   </span>
                 </div>
 
                 {/* Time */}
-                <div className="flex items-center gap-2.5">
-                  <Clock className="w-4.5 h-4.5 shrink-0" style={{ color: primaryColor }} />
-                  <span className="font-light text-left">
-                    {userData.time || '—:— AM/PM'}
+                <div className="flex flex-col items-center gap-1">
+                  <Clock className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
+                  <span className="font-medium tracking-wide">
+                    {userData.time || 'Time to be announced'}
                   </span>
                 </div>
 
                 {/* Venue / Address */}
-                <div className="flex items-start gap-2.5">
-                  <MapPin className="w-4.5 h-4.5 shrink-0 mt-0.5" style={{ color: primaryColor }} />
-                  <div className="text-left">
-                    <p className="font-medium text-gray-800">{userData.venue || 'Event Venue'}</p>
-                    {(userData.address) && (
-                      <p className="text-[10px] text-gray-400 mt-0.5 font-light leading-normal">{userData.address}</p>
+                <div className="flex flex-col items-center gap-1">
+                  <MapPin className="w-4 h-4 shrink-0" style={{ color: primaryColor }} />
+                  <div className="text-center">
+                    <p className="font-semibold text-gray-900">{userData.venue || 'Venue to be announced'}</p>
+                    {userData.address && (
+                      <p className="text-[10px] text-gray-600 mt-0.5 font-normal leading-normal max-w-[220px] mx-auto">{userData.address}</p>
                     )}
                   </div>
                 </div>
@@ -322,7 +355,7 @@ export default function InvitationRenderer({
         </div>
 
         {/* Elegant footer decoration */}
-        <div className="flex justify-center mt-6 text-gray-200">
+        <div className="flex justify-center mt-5 text-gray-300">
           <Heart className="w-3.5 h-3.5 fill-current" style={{ color: `${primaryColor}30` }} />
         </div>
       </div>
