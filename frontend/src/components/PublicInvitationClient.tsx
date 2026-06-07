@@ -7,7 +7,7 @@ import {
   VolumeX, Volume2, ChevronLeft, ChevronRight, Share2
 } from 'lucide-react';
 import { apiService } from '../services/api';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
 
 interface PublicInvitationClientProps {
   invite: {
@@ -346,16 +346,29 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
 
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // Scroll Animation Hooks for Groom/Bride hugging animation (using scrollY to avoid hydration issues)
+  // Scroll Animation Hooks for Groom/Bride hugging animation (using scrollY with useSpring to avoid hydration issues and smooth scroll-linked motions)
   const { scrollY } = useScroll();
 
-  // Calculate translations based on scroll pixels (responsive meeting in the center)
-  const groomX = useTransform(scrollY, [0, 300], ["0vw", "37vw"]);
-  const brideX = useTransform(scrollY, [0, 300], ["0vw", "-37vw"]);
+  // Create a spring-smoothed scroll value
+  const smoothScrollY = useSpring(scrollY, {
+    damping: 35,
+    stiffness: 80,
+    mass: 0.5
+  });
+
+  // Calculate translations based on smooth scroll (responsive meeting in the center)
+  const groomX = useTransform(smoothScrollY, [0, 320], ["0vw", "37vw"]);
+  const brideX = useTransform(smoothScrollY, [0, 320], ["0vw", "-37vw"]);
 
   // Opacities: Groom and Bride fade out, Couple image fades in
-  const charactersOpacity = useTransform(scrollY, [0, 250, 300], [1, 1, 0]);
-  const coupleOpacity = useTransform(scrollY, [220, 300, 450], [0, 1, 0]);
+  const charactersOpacity = useTransform(smoothScrollY, [0, 280, 320], [1, 1, 0]);
+  const coupleOpacity = useTransform(smoothScrollY, [290, 340, 680, 800], [0, 1, 1, 0]);
+
+  // Zoom / Scale: Couple zooms in from 0.75 to 1.55
+  const coupleScale = useTransform(smoothScrollY, [290, 340, 680, 800], [0.75, 1.0, 1.55, 1.7]);
+
+  // Background text opacity: fades out completely when characters start meeting
+  const textOpacity = useTransform(smoothScrollY, [0, 180, 280], [1, 1, 0]);
 
   // RSVP Form States
   const [name, setName] = useState('');
@@ -459,6 +472,54 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
     }
     loadRSVPs();
   }, [slug]);
+
+  // Desktop-specific scroll speed dampener for smooth and slower scrolling experience
+  useEffect(() => {
+    if (typeof window === 'undefined' || window.innerWidth < 768) return;
+
+    let targetScrollY = window.scrollY;
+    let currentScrollY = window.scrollY;
+    let isScrolling = false;
+
+    const onScrollReset = () => {
+      if (!isScrolling) {
+        targetScrollY = window.scrollY;
+        currentScrollY = window.scrollY;
+      }
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      // Dampen deltaY to slow down scroll speed
+      targetScrollY += e.deltaY * 0.45;
+      targetScrollY = Math.max(0, Math.min(targetScrollY, document.documentElement.scrollHeight - window.innerHeight));
+
+      if (!isScrolling) {
+        isScrolling = true;
+        requestAnimationFrame(updateScroll);
+      }
+    };
+
+    const updateScroll = () => {
+      const diff = targetScrollY - currentScrollY;
+      currentScrollY += diff * 0.075; // Lerp factor for buttery dampening
+
+      window.scrollTo(0, currentScrollY);
+
+      if (Math.abs(diff) > 0.4) {
+        requestAnimationFrame(updateScroll);
+      } else {
+        isScrolling = false;
+      }
+    };
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('scroll', onScrollReset);
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      window.removeEventListener('scroll', onScrollReset);
+    };
+  }, []);
 
   // Format Date beautifully
   const formatDate = (dateStr?: string) => {
@@ -574,152 +635,174 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
       <MusicPlayer url={activeTheme.musicUrl} />
 
       {/* 1. HERO SECTION */}
-      <section className="relative h-screen w-full flex flex-col justify-between items-center text-center px-4 overflow-hidden border-b border-gray-100/40">
-        
-        {/* Floating Particles overlay */}
-        <FloatingParticles type={themeKey} />
-
-        {/* Parallax Background Cover Image or Watercolor */}
-        <div className="absolute inset-0 z-0">
-          {bgImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img 
-              src={bgImage} 
-              alt="Luxury Background" 
-              className="w-full h-full object-cover opacity-60"
-            />
-          ) : activeTheme.assets.bg ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img 
-              src={activeTheme.assets.bg} 
-              alt="Luxury Background" 
-              className="w-full h-full object-cover opacity-45"
-            />
-          ) : (
-            <div className="w-full h-full bg-[#FAF8F5] opacity-20 absolute inset-0" />
-          )}
-          {/* Soft overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/80 to-transparent" />
-        </div>
-
-        {/* Header/Event category badge */}
-        <div className="relative z-10 pt-12">
-          <span 
-            className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-3xs uppercase tracking-widest font-semibold bg-white/95 border shadow-xs"
-            style={{ 
-              color: primaryColor, 
-              borderColor: `${primaryColor}30`,
-            }}
-          >
-            <Sparkles className="w-3 h-3 text-gold-500 animate-pulse" />
-            {serviceType} INVITATION ATELIER
-          </span>
-        </div>
-
-        {/* Hero Content Grid (Centered luxury text layout framed by standing characters) */}
-        <div className="relative z-10 max-w-6xl w-full px-4 flex flex-col md:flex-row items-center justify-center gap-8 flex-grow">
+      {/* 1. HERO SECTION WITH STICKY SCROLL PINNING */}
+      <section className="relative h-[220vh] w-full">
+        <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center text-center px-4 overflow-hidden border-b border-gray-100/40">
           
-          {/* Standing Groom */}
-          {serviceType === 'wedding' && (
-            <motion.div 
-              style={{ x: groomX, opacity: charactersOpacity }}
-              className="flex absolute left-2 md:left-6 lg:left-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
-            >
-              <img 
-                src="/assets/wedding/groom.png" 
-                alt="Groom Illustration" 
-                className="h-full object-contain filter drop-shadow-xl"
-              />
-            </motion.div>
-          )}
+          {/* Floating Particles overlay */}
+          <FloatingParticles type={themeKey} />
 
-          {/* Central Text Details */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex-1 max-w-2xl text-center flex flex-col items-center justify-center py-6"
-          >
-            <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
-              TOGETHER WITH THEIR FAMILIES
-            </span>
-            
-            {serviceType === 'wedding' ? (
-              <>
-                <h1 
-                  className="text-4xl sm:text-6xl lg:text-7xl font-light tracking-wide leading-tight my-2"
-                  style={{ fontFamily: fontHeader, color: primaryColor }}
-                >
-                  {userData.groomName || 'Arjun'}
-                  <span className="block text-2xl font-serif italic my-2 text-gray-400 font-light">&amp;</span>
-                  {userData.brideName || 'Meera'}
-                </h1>
-              </>
+          {/* Parallax Background Cover Image or Watercolor */}
+          <div className="absolute inset-0 z-0">
+            {bgImage ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img 
+                src={bgImage} 
+                alt="Luxury Background" 
+                className="w-full h-full object-cover opacity-60"
+              />
+            ) : activeTheme.assets.bg ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img 
+                src={activeTheme.assets.bg} 
+                alt="Luxury Background" 
+                className="w-full h-full object-cover opacity-45"
+              />
             ) : (
-              <h1 
-                className="text-4xl sm:text-6xl font-light tracking-wide leading-tight my-2"
-                style={{ fontFamily: fontHeader, color: primaryColor }}
+              <div className="w-full h-full bg-[#FAF8F5] opacity-20 absolute inset-0" />
+            )}
+            {/* Soft overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/80 to-transparent" />
+          </div>
+
+          {/* Header/Event category badge */}
+          <div className="relative z-10 pt-12">
+            <span 
+              className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-3xs uppercase tracking-widest font-semibold bg-white/95 border shadow-xs"
+              style={{ 
+                color: primaryColor, 
+                borderColor: `${primaryColor}30`,
+              }}
+            >
+              <Sparkles className="w-3 h-3 text-gold-500 animate-pulse" />
+              {serviceType} INVITATION ATELIER
+            </span>
+          </div>
+
+          {/* Hero Content Grid (Centered luxury text layout framed by standing characters) */}
+          <div className="relative z-10 max-w-6xl w-full px-4 flex flex-col md:flex-row items-center justify-center gap-8 flex-grow">
+            
+            {/* Standing Groom */}
+            {serviceType === 'wedding' && (
+              <motion.div 
+                style={{ x: groomX, opacity: charactersOpacity }}
+                className="flex absolute left-2 md:left-6 lg:left-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
               >
-                {userData.coupleNames || userData.recipientName || userData.name || userData.familyName || 'Arjun & Meera'}
-              </h1>
+                <img 
+                  src="/assets/wedding/groom.png" 
+                  alt="Groom Illustration" 
+                  className="h-full object-contain filter drop-shadow-xl"
+                />
+              </motion.div>
             )}
 
-            <div className="flex justify-center items-center gap-1.5 my-3 text-red-500/40">
-              <Heart className="w-3.5 h-3.5 fill-current" style={{ color: `${primaryColor}60` }} />
-            </div>
-
-            <p className="text-[10px] sm:text-[11px] font-semibold tracking-widest text-gray-400 uppercase mb-4">
-              INVITE YOU TO CELEBRATE {serviceType === 'wedding' ? 'THEIR WEDDING' : 'THIS SPECIAL OCCASION'}
-            </p>
-
-            {/* Structured Split Date (MATCHING SCREENSHOT) */}
-            <div className="flex items-center justify-center gap-4 border-y border-[#C8A96B]/25 py-3 px-6 my-4 text-xs sm:text-sm tracking-widest font-light text-gray-600 max-w-sm w-full">
-              <span className="uppercase">{getDetailedDate(userData.date || userData.weddingDate).weekday}</span>
-              <span className="text-2xl sm:text-3xl font-light text-[#C8A96B] px-4 border-x border-[#C8A96B]/25 font-playfair">
-                {getDetailedDate(userData.date || userData.weddingDate).day}
-              </span>
-              <span className="uppercase">{getDetailedDate(userData.date || userData.weddingDate).monthYear}</span>
-            </div>
-
-            <p className="text-[10px] sm:text-[11px] font-medium tracking-widest text-gray-400 uppercase mt-2">
-              AT {userData.time ? userData.time.toUpperCase() : 'SIX O\'CLOCK IN THE EVENING'}
-            </p>
-          </motion.div>
-
-          {/* Standing Bride */}
-          {serviceType === 'wedding' && (
+            {/* Central Text Details */}
             <motion.div 
-              style={{ x: brideX, opacity: charactersOpacity }}
-              className="flex absolute right-2 md:right-6 lg:right-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
+              style={{ opacity: textOpacity }}
+              className="flex-1 max-w-2xl text-center flex flex-col items-center justify-center py-6"
             >
-              <img 
-                src="/assets/wedding/bride.png" 
-                alt="Bride Illustration" 
-                className="h-full object-contain filter drop-shadow-xl"
-              />
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col items-center justify-center"
+              >
+                <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
+                  TOGETHER WITH THEIR FAMILIES
+                </span>
+                
+                {serviceType === 'wedding' ? (
+                  <>
+                    <h1 
+                      className="text-4xl sm:text-6xl lg:text-7xl font-light tracking-wide leading-tight my-2"
+                      style={{ fontFamily: fontHeader, color: primaryColor }}
+                    >
+                      {userData.groomName || 'Arjun'}
+                      <span className="block text-2xl font-serif italic my-2 text-gray-400 font-light">&amp;</span>
+                      {userData.brideName || 'Meera'}
+                    </h1>
+                  </>
+                ) : (
+                  <h1 
+                    className="text-4xl sm:text-6xl font-light tracking-wide leading-tight my-2"
+                    style={{ fontFamily: fontHeader, color: primaryColor }}
+                  >
+                    {userData.coupleNames || userData.recipientName || userData.name || userData.familyName || 'Arjun & Meera'}
+                  </h1>
+                )}
+
+                <div className="flex justify-center items-center gap-1.5 my-3 text-red-500/40">
+                  <Heart className="w-3.5 h-3.5 fill-current" style={{ color: `${primaryColor}60` }} />
+                </div>
+
+                <p className="text-[10px] sm:text-[11px] font-semibold tracking-widest text-gray-400 uppercase mb-4">
+                  INVITE YOU TO CELEBRATE {serviceType === 'wedding' ? 'THEIR WEDDING' : 'THIS SPECIAL OCCASION'}
+                </p>
+
+                {/* Structured Split Date (MATCHING SCREENSHOT) */}
+                <div className="flex items-center justify-center gap-4 border-y border-[#C8A96B]/25 py-3 px-6 my-4 text-xs sm:text-sm tracking-widest font-light text-gray-600 max-w-sm w-full">
+                  <span className="uppercase">{getDetailedDate(userData.date || userData.weddingDate).weekday}</span>
+                  <span className="text-2xl sm:text-3xl font-light text-[#C8A96B] px-4 border-x border-[#C8A96B]/25 font-playfair">
+                    {getDetailedDate(userData.date || userData.weddingDate).day}
+                  </span>
+                  <span className="uppercase">{getDetailedDate(userData.date || userData.weddingDate).monthYear}</span>
+                </div>
+
+                <p className="text-[10px] sm:text-[11px] font-medium tracking-widest text-gray-400 uppercase mt-2">
+                  AT {userData.time ? userData.time.toUpperCase() : 'SIX O\'CLOCK IN THE EVENING'}
+                </p>
+              </motion.div>
             </motion.div>
-          )}
 
-          {/* Hugging Couple (Fades in at scroll) */}
-          {serviceType === 'wedding' && (
-            <motion.div 
-              style={{ opacity: coupleOpacity }}
-              className="flex absolute left-1/2 bottom-12 md:bottom-20 -translate-x-1/2 z-15 w-28 sm:w-36 md:w-52 lg:w-60 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
-            >
-              <img 
-                src="/assets/wedding/couple.png" 
-                alt="Couple Hugging" 
-                className="h-full object-contain filter drop-shadow-2xl"
-              />
-            </motion.div>
-          )}
+            {/* Standing Bride */}
+            {serviceType === 'wedding' && (
+              <motion.div 
+                style={{ x: brideX, opacity: charactersOpacity }}
+                className="flex absolute right-2 md:right-6 lg:left-auto lg:right-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
+              >
+                <img 
+                  src="/assets/wedding/bride.png" 
+                  alt="Bride Illustration" 
+                  className="h-full object-contain filter drop-shadow-xl"
+                />
+              </motion.div>
+            )}
 
-        </div>
+            {/* Hugging Couple (Fades in at scroll) */}
+            {serviceType === 'wedding' && (
+              <motion.div 
+                style={{ opacity: coupleOpacity, scale: coupleScale }}
+                className="flex absolute left-1/2 bottom-12 md:bottom-20 -translate-x-1/2 z-15 w-28 sm:w-36 md:w-52 lg:w-60 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
+              >
+                <img 
+                  src="/assets/wedding/couple.png" 
+                  alt="Couple Hugging" 
+                  className="h-full object-contain filter drop-shadow-2xl"
+                />
+              </motion.div>
+            )}
 
-        {/* Scroll Indicator */}
-        <div className="relative z-10 pb-8 flex flex-col items-center gap-1 animate-bounce text-gray-400 hover:text-[#C8A96B] cursor-pointer">
-          <span className="text-[9px] uppercase tracking-widest font-semibold">Scroll to View</span>
-          <ChevronDown className="w-4 h-4" />
+            {/* Centered Category Hero Image (Fades & Zooms on scroll for Birthday, Baby Shower, Anniversary, Housewarming, Engagement) */}
+            {serviceType !== 'wedding' && activeTheme.assets.hero && (
+              <motion.div 
+                style={{ opacity: coupleOpacity, scale: coupleScale }}
+                className="flex absolute left-1/2 bottom-12 md:bottom-20 -translate-x-1/2 z-15 w-28 sm:w-36 md:w-52 lg:w-60 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
+              >
+                <img 
+                  src={activeTheme.assets.hero} 
+                  alt={`${serviceType} Hero`} 
+                  className="h-full object-contain filter drop-shadow-2xl"
+                />
+              </motion.div>
+            )}
+
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="relative z-10 pb-8 flex flex-col items-center gap-1 animate-bounce text-gray-400 hover:text-[#C8A96B] cursor-pointer">
+            <span className="text-[9px] uppercase tracking-widest font-semibold">Scroll to View</span>
+            <ChevronDown className="w-4 h-4" />
+          </div>
         </div>
       </section>
 
