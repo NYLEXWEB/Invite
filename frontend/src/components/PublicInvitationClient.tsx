@@ -515,7 +515,7 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
       return;
     }
     
-    const isWishMode = userData.mode === 'wish';
+    const isWishMode = true;
     if (!isWishMode && attending === null) {
       setErrorMsg('Please select your attendance.');
       return;
@@ -1071,12 +1071,10 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
           <div className="absolute top-0 left-0 right-0 h-1.5" style={{ backgroundColor: primaryColor }} />
           
           <h2 className="text-2xl font-light tracking-wide text-gray-900 mb-2" style={{ fontFamily: fontHeader }}>
-            {userData.mode === 'wish' ? 'Send a Celebration Wish' : 'Are You Attending?'}
+            Send a Celebration Wish
           </h2>
           <p className="text-xs text-gray-400 font-light mb-8">
-            {userData.mode === 'wish' 
-              ? 'Send a warm congratulatory message to your friend to celebrate this occasion.'
-              : 'Please RSVP by submitting the form below to help us plan better.'}
+            Send a warm congratulatory message to celebrate this special occasion.
           </p>
 
           {submitSuccess ? (
@@ -1085,18 +1083,16 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                 <Check className="w-5 h-5" />
               </div>
               <h3 className="font-semibold text-gray-800">
-                {userData.mode === 'wish' ? 'Wish Sent Successfully!' : 'Thank You for Your RSVP!'}
+                Wish Sent Successfully!
               </h3>
               <p className="text-xs text-gray-400 font-light">
-                {userData.mode === 'wish' 
-                  ? 'Your warm wishing message has been published on the wishes board.'
-                  : 'Your response has been logged, and your congratulatory note has been added to our guestbook.'}
+                Your warm wishing message has been published on the wishes board.
               </p>
               <button 
                 onClick={() => setSubmitSuccess(false)}
                 className="mt-4 text-xs font-semibold uppercase tracking-wider text-gold-600 hover:underline"
               >
-                {userData.mode === 'wish' ? 'Send another wish' : 'Submit another response'}
+                Send another wish
               </button>
             </div>
           ) : (
@@ -1121,67 +1117,15 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                 />
               </div>
 
-              {/* Attending Toggle & Guest Count (Only show if NOT wish mode) */}
-              {userData.mode !== 'wish' && (
-                <>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Will you attend?</label>
-                    <div className="grid grid-cols-2 gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setAttending(true)}
-                        className={`flex items-center justify-center gap-1.5 py-3 rounded-2xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 border ${
-                          attending === true 
-                            ? 'bg-black text-white border-black shadow-sm' 
-                            : 'bg-white border-gray-100 hover:border-gold-500/20 text-gray-500'
-                        }`}
-                      >
-                        <UserCheck className="w-4 h-4" />
-                        Accept
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setAttending(false)}
-                        className={`flex items-center justify-center gap-1.5 py-3 rounded-2xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 border ${
-                          attending === false 
-                            ? 'bg-black text-white border-black shadow-sm' 
-                            : 'bg-white border-gray-100 hover:border-gold-500/20 text-gray-500'
-                        }`}
-                      >
-                        <AlertCircle className="w-4 h-4" />
-                        Decline
-                      </button>
-                    </div>
-                  </div>
-
-                  {attending === true && (
-                    <div className="space-y-1.5 animate-fade-in">
-                      <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">Number of Guests</label>
-                      <div className="flex items-center gap-3">
-                        <input 
-                          type="number" 
-                          min="1"
-                          max="10"
-                          value={guests}
-                          onChange={(e) => setGuests(Number(e.target.value) || 1)}
-                          className="w-24 border border-gray-100 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A96B] text-center"
-                        />
-                        <span className="text-xs text-gray-400 font-light">person(s) including yourself</span>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-
               {/* Congratulations Message */}
               <div className="space-y-1.5">
                 <label className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-                  {userData.mode === 'wish' ? 'Your Wish Message' : 'Leave a Congratulatory Message (Optional)'}
+                  Your Wish Message
                 </label>
                 <textarea 
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder={userData.mode === 'wish' ? 'Write your sweet congratulatory birthday/wedding wish here...' : 'Share a sweet message or greeting...'}
+                  placeholder="Write your sweet congratulatory wish here..."
                   rows={3}
                   className="w-full border border-gray-100 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-[#C8A96B] transition-colors resize-none"
                 />
@@ -1193,7 +1137,7 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                 disabled={submitting}
                 className="w-full bg-black hover:bg-[#C8A96B] text-white rounded-full py-3.5 text-xs font-semibold uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 shadow-sm disabled:opacity-50"
               >
-                {submitting ? 'Submitting...' : userData.mode === 'wish' ? 'Send Wish Greeting' : 'Send RSVP'}
+                {submitting ? 'Submitting...' : 'Send Wish Greeting'}
               </button>
             </form>
           )}
@@ -1227,31 +1171,9 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                   <div className="flex justify-between items-start mb-2.5">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-sm text-gray-800">{item.name}</span>
-                      {userData.mode !== 'wish' ? (
-                        <span 
-                          className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider border ${
-                            item.attending 
-                              ? 'bg-green-50/50 border-green-100 text-green-600' 
-                              : 'bg-red-50/50 border-red-100 text-red-500'
-                          }`}
-                        >
-                          {item.attending ? (
-                            <>
-                              <UserCheck className="w-2.5 h-2.5" />
-                              Attending ({item.guests})
-                            </>
-                          ) : (
-                            <>
-                              <AlertCircle className="w-2.5 h-2.5" />
-                              Declined
-                            </>
-                          )}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider border bg-amber-50/50 border-[#C8A96B]/20 text-[#C8A96B]">
-                          Wished ✨
-                        </span>
-                      )}
+                      <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider border bg-amber-50/50 border-[#C8A96B]/20 text-[#C8A96B]">
+                        Wished ✨
+                      </span>
                     </div>
                     <span className="text-[10px] text-gray-300 font-light">
                       {new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
