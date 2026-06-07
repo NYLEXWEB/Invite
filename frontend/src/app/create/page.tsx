@@ -709,29 +709,6 @@ function WizardContent() {
                     </>
                   )}
 
-                  {/* Cover Image Upload */}
-                  <div className="space-y-2">
-                    <label className="text-3xs font-semibold uppercase tracking-widest text-gray-400">Cover Image</label>
-                    <div className="mt-1 flex justify-center rounded-2xl border border-dashed border-gray-200 px-6 py-6 hover:border-[#C8A96B]/50 transition-colors bg-white">
-                      <div className="space-y-1.5 text-center">
-                        <Upload className="mx-auto h-7 w-7 text-gray-400" />
-                        <div className="flex text-xs text-gray-600">
-                          <label className="relative cursor-pointer rounded-md bg-white font-semibold text-[#C8A96B] focus-within:outline-none hover:text-gold-500">
-                            <span>Upload a photo</span>
-                            <input type="file" accept="image/*" onChange={handleImageChange} className="sr-only" />
-                          </label>
-                          <p className="pl-1 font-light">or drag and drop</p>
-                        </div>
-                        <p className="text-[10px] text-gray-400 font-light">PNG, JPG, WEBP up to 5MB</p>
-                      </div>
-                    </div>
-                    {imageFile && (
-                      <p className="text-xs text-emerald-600 font-semibold flex items-center gap-1.5 mt-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                        Loaded: {imageFile.name} ({(imageFile.size / 1024 / 1024).toFixed(2)} MB)
-                      </p>
-                    )}
-                  </div>
 
                   {/* Invitation Message */}
                   <div className="space-y-1.5">

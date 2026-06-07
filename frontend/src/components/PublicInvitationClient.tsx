@@ -7,7 +7,7 @@ import {
   VolumeX, Volume2, ChevronLeft, ChevronRight, Share2
 } from 'lucide-react';
 import { apiService } from '../services/api';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 
 interface PublicInvitationClientProps {
   invite: {
@@ -346,6 +346,17 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
 
   const [activeSlide, setActiveSlide] = useState(0);
 
+  // Scroll Animation Hooks for Groom/Bride hugging animation (using scrollY to avoid hydration issues)
+  const { scrollY } = useScroll();
+
+  // Calculate translations based on scroll pixels (responsive meeting in the center)
+  const groomX = useTransform(scrollY, [0, 300], ["0vw", "37vw"]);
+  const brideX = useTransform(scrollY, [0, 300], ["0vw", "-37vw"]);
+
+  // Opacities: Groom and Bride fade out, Couple image fades in
+  const charactersOpacity = useTransform(scrollY, [0, 250, 300], [1, 1, 0]);
+  const coupleOpacity = useTransform(scrollY, [220, 300, 450], [0, 1, 0]);
+
   // RSVP Form States
   const [name, setName] = useState('');
   const [attending, setAttending] = useState<boolean | null>(null);
@@ -606,20 +617,18 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
         </div>
 
         {/* Hero Content Grid (Centered luxury text layout framed by standing characters) */}
-        <div className="relative z-10 max-w-6xl w-full px-4 flex flex-col md:flex-row items-center justify-between gap-8 flex-grow">
+        <div className="relative z-10 max-w-6xl w-full px-4 flex flex-col md:flex-row items-center justify-center gap-8 flex-grow">
           
-          {/* Standing Groom - Desktop Left */}
+          {/* Standing Groom */}
           {serviceType === 'wedding' && (
             <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: 'easeOut' }}
-              className="hidden md:flex flex-1 max-w-[200px] lg:max-w-[240px] items-end justify-center h-[450px]"
+              style={{ x: groomX, opacity: charactersOpacity }}
+              className="flex absolute left-2 md:left-6 lg:left-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
             >
               <img 
                 src="/assets/wedding/groom.png" 
                 alt="Groom Illustration" 
-                className="h-full object-contain filter drop-shadow-xl hover:scale-103 transition-transform duration-300"
+                className="h-full object-contain filter drop-shadow-xl"
               />
             </motion.div>
           )}
@@ -677,18 +686,30 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
             </p>
           </motion.div>
 
-          {/* Standing Bride - Desktop Right */}
+          {/* Standing Bride */}
           {serviceType === 'wedding' && (
             <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: 'easeOut' }}
-              className="hidden md:flex flex-1 max-w-[200px] lg:max-w-[240px] items-end justify-center h-[450px]"
+              style={{ x: brideX, opacity: charactersOpacity }}
+              className="flex absolute right-2 md:right-6 lg:right-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
             >
               <img 
                 src="/assets/wedding/bride.png" 
                 alt="Bride Illustration" 
-                className="h-full object-contain filter drop-shadow-xl hover:scale-103 transition-transform duration-300"
+                className="h-full object-contain filter drop-shadow-xl"
+              />
+            </motion.div>
+          )}
+
+          {/* Hugging Couple (Fades in at scroll) */}
+          {serviceType === 'wedding' && (
+            <motion.div 
+              style={{ opacity: coupleOpacity }}
+              className="flex absolute left-1/2 bottom-12 md:bottom-20 -translate-x-1/2 z-15 w-28 sm:w-36 md:w-52 lg:w-60 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
+            >
+              <img 
+                src="/assets/wedding/couple.png" 
+                alt="Couple Hugging" 
+                className="h-full object-contain filter drop-shadow-2xl"
               />
             </motion.div>
           )}
@@ -1042,73 +1063,7 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
         </>
       )}
 
-      {/* 5. GORGEOUS MOMENTS GALLERY */}
-      <section className="py-24 px-4 bg-[#FAF9F6]">
-        <div className="max-w-5xl mx-auto space-y-12">
-          <div className="text-center space-y-1">
-            <span className="text-[10px] uppercase tracking-widest font-semibold text-gray-400">CAPTURED MEMORIES</span>
-            <h2 className="text-3xl sm:text-4xl font-light text-gray-900" style={{ fontFamily: fontHeader }}>
-              Our Moments
-            </h2>
-          </div>
 
-          {/* Luxury Sliding Carousel */}
-          {(() => {
-            const moments = [
-              { src: '/assets/wedding/couple.png', caption: 'Happy Together' },
-              { src: '/assets/wedding/bride.png', caption: 'The Gorgeous Bride' },
-              { src: '/assets/wedding/groom.png', caption: 'The Elegant Groom' },
-              { src: imageSrc || '/assets/wedding/bg.png', caption: 'Special Moments' }
-            ];
-            const defaultMoments = [
-              { src: imageSrc || activeTheme.assets.hero, caption: 'Celebration Moments' },
-              { src: activeTheme.assets.hero, caption: 'Special Highlight' },
-              { src: '/assets/wedding/bg.png', caption: 'Opulent Setting' }
-            ];
-            const activeMoments = serviceType === 'wedding' ? moments : defaultMoments;
-
-            return (
-              <div className="relative max-w-3xl mx-auto p-3 bg-white rounded-3xl border border-gray-150/40 shadow-xl overflow-hidden group">
-                <div className="relative h-[250px] sm:h-[450px] w-full rounded-2xl overflow-hidden bg-gray-50">
-                  <AnimatePresence mode="wait">
-                    <motion.img
-                      key={activeSlide}
-                      src={activeMoments[activeSlide].src}
-                      alt={activeMoments[activeSlide].caption}
-                      initial={{ opacity: 0, scale: 1.05 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.6 }}
-                      className="w-full h-full object-cover"
-                    />
-                  </AnimatePresence>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-6">
-                    <span className="text-white text-xs sm:text-sm font-semibold tracking-widest uppercase font-playfair">
-                      {activeMoments[activeSlide].caption}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Navigation Arrows */}
-                <button
-                  onClick={() => setActiveSlide((prev) => (prev === 0 ? activeMoments.length - 1 : prev - 1))}
-                  className="absolute left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#C8A96B] text-white flex items-center justify-center transition-colors shadow-md z-20"
-                  aria-label="Previous Slide"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => setActiveSlide((prev) => (prev === activeMoments.length - 1 ? 0 : prev + 1))}
-                  className="absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 hover:bg-[#C8A96B] text-white flex items-center justify-center transition-colors shadow-md z-20"
-                  aria-label="Next Slide"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-            );
-          })()}
-        </div>
-      </section>
 
       {/* 6. RSVP / WISH FORM SECTION */}
       <section className="py-24 px-4 max-w-xl mx-auto">
@@ -1329,71 +1284,6 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
           </div>
         </div>
       </section>
-
-      {/* Floating Capsule Share Bar */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-45 bg-white/90 backdrop-blur-md border border-[#C8A96B]/20 rounded-full px-6 py-3 shadow-lg flex items-center gap-4 text-[10px] font-semibold uppercase tracking-widest text-gray-700 max-w-xs sm:max-w-md w-auto">
-        <span className="shrink-0">Share with love</span>
-        <div className="w-[1px] h-4 bg-gray-200" />
-        <div className="flex items-center gap-3.5">
-          {/* WhatsApp */}
-          <a 
-            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`You are cordially invited! View details here: ${typeof window !== 'undefined' ? window.location.href : ''}`)}`} 
-            target="_blank" 
-            rel="noreferrer" 
-            className="text-gray-400 hover:text-green-500 transition-colors"
-            title="Share on WhatsApp"
-          >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963C16.788 2.025 14.322.99 11.98.99c-5.437 0-9.863 4.373-9.866 9.8.001 1.762.479 3.487 1.395 5.024L2.511 20.4l4.136-1.246zm12.39-5.123c-.305-.153-1.805-.89-2.083-.99-.277-.101-.48-.153-.681.153-.2.305-.777.99-.952 1.193-.175.203-.35.229-.655.077-1.393-.696-2.289-1.293-3.136-2.75-.222-.383.222-.356.637-1.189.102-.203.051-.381-.026-.533-.076-.153-.681-1.639-.933-2.247-.244-.588-.492-.51-.681-.52-.176-.01-.377-.01-.578-.01-.201 0-.529.076-.805.381-.277.305-1.058 1.033-1.058 2.521 0 1.488 1.083 2.923 1.234 3.126.152.203 2.13 3.253 5.16 4.561.72.311 1.282.497 1.721.637.724.229 1.382.197 1.902.12.58-.087 1.805-.738 2.058-1.452.253-.713.253-1.323.177-1.452-.075-.129-.278-.205-.582-.356z" />
-            </svg>
-          </a>
-          {/* Instagram */}
-          <a 
-            href="https://instagram.com" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="text-gray-400 hover:text-pink-500 transition-colors"
-            title="Instagram"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
-          </a>
-          {/* Facebook */}
-          <a 
-            href="https://facebook.com" 
-            target="_blank" 
-            rel="noreferrer" 
-            className="text-gray-400 hover:text-blue-600 transition-colors"
-            title="Facebook"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-            </svg>
-          </a>
-          {/* Share */}
-          <button 
-            onClick={() => {
-              if (navigator.share) {
-                navigator.share({
-                  title: `${serviceType.toUpperCase()} - ${hostNames}`,
-                  text: userData.message || 'You are invited!',
-                  url: window.location.href
-                }).catch(err => console.log(err));
-              } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert('Invitation link copied to clipboard!');
-              }
-            }}
-            className="text-gray-400 hover:text-[#C8A96B] transition-colors"
-            title="Copy Link"
-          >
-            <Share2 className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

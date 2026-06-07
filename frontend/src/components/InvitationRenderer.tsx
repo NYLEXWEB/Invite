@@ -94,10 +94,10 @@ export default function InvitationRenderer({
   const coverImage = getCoverImage();
 
   return (
-    <div 
+    <div
       className="w-full max-w-lg mx-auto rounded-3xl overflow-hidden shadow-2xl border border-gray-200/60 transition-all duration-300 relative bg-white gold-glow"
-      style={{ 
-        backgroundColor, 
+      style={{
+        backgroundColor,
         backgroundImage: bgImage ? `url(${bgImage})` : 'none',
         backgroundSize: '100% 100%',
         backgroundPosition: 'center',
@@ -108,13 +108,13 @@ export default function InvitationRenderer({
     >
       {/* Invitation/Greeting Contents */}
       <div className="pt-3 px-5 pb-5 sm:pt-4 sm:px-6 sm:pb-6 text-center relative">
-        
+
         {/* Floating badge */}
         <div className="flex justify-center mb-3">
-          <span 
+          <span
             className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] uppercase tracking-widest font-semibold bg-opacity-10 border"
-            style={{ 
-              color: primaryColor, 
+            style={{
+              color: primaryColor,
               borderColor: `${primaryColor}40`,
               backgroundColor: `${primaryColor}08`
             }}
@@ -125,7 +125,7 @@ export default function InvitationRenderer({
         </div>
 
         {/* Decorative Inner Border Box */}
-        <div 
+        <div
           className={`p-5 sm:p-6 rounded-2xl ${getBorderClasses()}`}
           style={borderStyleObj}
         >
@@ -154,7 +154,7 @@ export default function InvitationRenderer({
                 {serviceType === 'engagement' && (
                   <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Congratulations on Your Engagement</h2>
                 )}
-                <h1 
+                <h1
                   className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                   style={{ fontFamily: fontHeader, color: primaryColor }}
                 >
@@ -165,13 +165,13 @@ export default function InvitationRenderer({
               {/* Cover Image in Wish Mode */}
               {imageSrc && (
                 <div className="flex justify-center my-3">
-                  <div 
+                  <div
                     className="relative w-28 h-28 rounded-2xl overflow-hidden border p-1 bg-white shadow-md"
                     style={{ borderColor: `${primaryColor}40` }}
                   >
-                    <img 
-                      src={imageSrc} 
-                      alt="Greeting Visual" 
+                    <img
+                      src={imageSrc}
+                      alt="Greeting Visual"
                       className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
@@ -179,7 +179,7 @@ export default function InvitationRenderer({
               )}
 
               {/* Wish Message */}
-              <p 
+              <p
                 className="my-4 text-sm leading-relaxed text-gray-800 font-normal italic max-w-[280px] mx-auto"
                 style={{ fontFamily: fontSub }}
               >
@@ -189,8 +189,8 @@ export default function InvitationRenderer({
               {/* Signature Block */}
               <div className="mt-6 pt-5 border-t border-gray-200/80 text-center">
                 <p className="text-[9px] uppercase tracking-widest text-gray-600 font-bold mb-1">With Warm Wishes From</p>
-                <p 
-                  className="text-xl font-normal" 
+                <p
+                  className="text-xl font-normal"
                   style={{ fontFamily: fontHeader, color: primaryColor }}
                 >
                   {userData.senderName || 'Your Friend'}
@@ -211,7 +211,7 @@ export default function InvitationRenderer({
               {serviceType === 'wedding' && (
                 <div className="space-y-3">
                   <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">The Wedding of</h2>
-                  <h1 
+                  <h1
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
@@ -225,7 +225,7 @@ export default function InvitationRenderer({
               {serviceType === 'birthday' && (
                 <div className="space-y-3">
                   <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Celebrating</h2>
-                  <h1 
+                  <h1
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
@@ -240,7 +240,7 @@ export default function InvitationRenderer({
               {serviceType === 'anniversary' && (
                 <div className="space-y-3">
                   <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Happy Anniversary</h2>
-                  <h1 
+                  <h1
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
@@ -255,7 +255,7 @@ export default function InvitationRenderer({
               {serviceType === 'housewarming' && (
                 <div className="space-y-3">
                   <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">New Beginnings</h2>
-                  <h1 
+                  <h1
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
@@ -270,7 +270,7 @@ export default function InvitationRenderer({
               {serviceType === 'babyshower' && (
                 <div className="space-y-3">
                   <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Welcome Baby</h2>
-                  <h1 
+                  <h1
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
@@ -285,7 +285,7 @@ export default function InvitationRenderer({
               {(serviceType === 'engagement' || serviceType === 'savethedate') && (
                 <div className="space-y-3">
                   <h2 className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Save the Date</h2>
-                  <h1 
+                  <h1
                     className="text-2xl sm:text-3xl font-light tracking-wide leading-tight my-2"
                     style={{ fontFamily: fontHeader, color: primaryColor }}
                   >
@@ -300,13 +300,13 @@ export default function InvitationRenderer({
               {/* Cover Image in Event Mode */}
               {imageSrc && (
                 <div className="flex justify-center my-4 animate-fade-in">
-                  <div 
+                  <div
                     className="relative w-36 h-28 rounded-2xl overflow-hidden border p-1 bg-white shadow-md"
                     style={{ borderColor: `${primaryColor}40` }}
                   >
-                    <img 
-                      src={imageSrc} 
-                      alt="Event Cover" 
+                    <img
+                      src={imageSrc}
+                      alt="Event Cover"
                       className="w-full h-full object-cover rounded-xl"
                     />
                   </div>
@@ -314,7 +314,7 @@ export default function InvitationRenderer({
               )}
 
               {/* Invitation Message */}
-              <p 
+              <p
                 className="my-4 text-sm leading-relaxed text-gray-800 font-normal italic max-w-[280px] mx-auto"
                 style={{ fontFamily: fontSub }}
               >
