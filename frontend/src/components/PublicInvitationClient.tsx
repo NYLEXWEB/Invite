@@ -1375,4 +1375,25 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
           </a>
           {/* Share */}
           <button 
-            onClick={() 
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: `${serviceType.toUpperCase()} - ${hostNames}`,
+                  text: userData.message || 'You are invited!',
+                  url: window.location.href
+                }).catch(err => console.log(err));
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Invitation link copied to clipboard!');
+              }
+            }}
+            className="text-gray-400 hover:text-[#C8A96B] transition-colors"
+            title="Copy Link"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
