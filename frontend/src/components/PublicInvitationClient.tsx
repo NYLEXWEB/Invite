@@ -4,10 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Clock, MapPin, Heart, Sparkles, Navigation, Check, 
   ChevronDown, CalendarCheck, MessageSquare, Users, UserCheck, AlertCircle,
-  VolumeX, Volume2, ChevronLeft, ChevronRight, Share2
+  VolumeX, Volume2, ChevronLeft, ChevronRight, Share2,
+  Cake, Gift, Home, Gem, Key, Cloud, Star
 } from 'lucide-react';
 import { apiService } from '../services/api';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion';
+import BirthdayLayout from './BirthdayLayout';
+import BabyShowerLayout from './BabyShowerLayout';
+import AnniversaryLayout from './AnniversaryLayout';
+import HousewarmingLayout from './HousewarmingLayout';
+import EngagementLayout from './EngagementLayout';
+import GreetingWishLayout from './GreetingWishLayout';
 
 interface PublicInvitationClientProps {
   invite: {
@@ -158,7 +165,7 @@ const eventThemes: Record<string, {
 };
 
 // Reusable Components inside file
-function FloatingParticles({ type }: { type: string }) {
+export function FloatingParticles({ type }: { type: string }) {
   const [particles, setParticles] = useState<any[]>([]);
 
   useEffect(() => {
@@ -206,7 +213,7 @@ function FloatingParticles({ type }: { type: string }) {
   );
 }
 
-function CountdownTimer({ targetDate, primaryColor, fontHeader }: { targetDate: string, primaryColor: string, fontHeader: string }) {
+export function CountdownTimer({ targetDate, primaryColor, fontHeader }: { targetDate: string, primaryColor: string, fontHeader: string }) {
   const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -269,7 +276,7 @@ function CountdownTimer({ targetDate, primaryColor, fontHeader }: { targetDate: 
   );
 }
 
-function MusicPlayer({ url }: { url: string }) {
+export function MusicPlayer({ url }: { url: string }) {
   const [playing, setPlaying] = useState(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
 
@@ -622,6 +629,61 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
     animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } }
   };
 
+  const layoutProps = {
+    userData,
+    serviceType,
+    slug,
+    imageSrc,
+    activeTheme,
+    primaryColor,
+    secondaryColor,
+    backgroundColor,
+    fontHeader,
+    fontSub,
+    fontBody,
+    themeKey,
+    bgImage,
+    getDetailedDate,
+    formatDate,
+    getGoogleCalendarUrl,
+    getMapsUrl,
+    rsvps,
+    loadingRsvps,
+    name,
+    setName,
+    message,
+    setMessage,
+    submitting,
+    submitSuccess,
+    errorMsg,
+    handleRSVPSubmit,
+    celebrated,
+    triggerCelebration,
+    particles
+  };
+
+  // If this is a greeting wish card instead of an event invitation, render the greeting layout
+  if (userData?.mode === 'wish') {
+    return <GreetingWishLayout {...layoutProps} />;
+  }
+
+  // Render based on service type to provide completely separate layout styles
+  if (serviceType === 'birthday') {
+    return <BirthdayLayout {...layoutProps} />;
+  }
+  if (serviceType === 'babyshower') {
+    return <BabyShowerLayout {...layoutProps} />;
+  }
+  if (serviceType === 'anniversary') {
+    return <AnniversaryLayout {...layoutProps} />;
+  }
+  if (serviceType === 'housewarming') {
+    return <HousewarmingLayout {...layoutProps} />;
+  }
+  if (serviceType === 'engagement') {
+    return <EngagementLayout {...layoutProps} />;
+  }
+
   return (
     <div 
       className="w-full min-h-screen transition-colors duration-500 selection:bg-gold-500 selection:text-white"
@@ -682,19 +744,35 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
           {/* Hero Content Grid (Centered luxury text layout framed by standing characters) */}
           <div className="relative z-10 max-w-6xl w-full px-4 flex flex-col md:flex-row items-center justify-center gap-8 flex-grow">
             
-            {/* Standing Groom */}
-            {serviceType === 'wedding' && (
-              <motion.div 
-                style={{ x: groomX, opacity: charactersOpacity }}
-                className="flex absolute left-2 md:left-6 lg:left-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
-              >
+            {/* Standing Left Character / Decorative Element */}
+            <motion.div 
+              style={{ x: groomX, opacity: charactersOpacity }}
+              className="flex absolute left-2 md:left-6 lg:left-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
+            >
+              {serviceType === 'wedding' ? (
                 <img 
                   src="/assets/wedding/groom.png" 
                   alt="Groom Illustration" 
                   className="h-full object-contain filter drop-shadow-xl"
                 />
-              </motion.div>
-            )}
+              ) : (
+                <div 
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center border shadow-xl backdrop-blur-md animate-pulse"
+                  style={{ 
+                    borderColor: `${primaryColor}40`,
+                    backgroundColor: `${backgroundColor}D0`,
+                    color: primaryColor,
+                    boxShadow: `0 10px 25px -5px ${primaryColor}20`
+                  }}
+                >
+                  {serviceType === 'birthday' && <Gift className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2]" />}
+                  {serviceType === 'babyshower' && <Cloud className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2]" />}
+                  {serviceType === 'anniversary' && <Heart className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2] fill-current" />}
+                  {serviceType === 'housewarming' && <Home className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2]" />}
+                  {serviceType === 'engagement' && <Gem className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2]" />}
+                </div>
+              )}
+            </motion.div>
 
             {/* Central Text Details */}
             <motion.div 
@@ -708,10 +786,21 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                 className="flex flex-col items-center justify-center"
               >
                 <span className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-widest text-gray-400 mb-2">
-                  TOGETHER WITH THEIR FAMILIES
+                  {serviceType === 'wedding' ? 'TOGETHER WITH THEIR FAMILIES' : 'YOU ARE CORDIALLY INVITED'}
                 </span>
                 
                 {serviceType === 'wedding' ? (
+                  <>
+                    <h1 
+                      className="text-4xl sm:text-6xl lg:text-7xl font-light tracking-wide leading-tight my-2"
+                      style={{ fontFamily: fontHeader, color: primaryColor }}
+                    >
+                      {userData.groomName || 'Arjun'}
+                      <span className="block text-2xl font-serif italic my-2 text-gray-400 font-light">&amp;</span>
+                      {userData.brideName || 'Meera'}
+                    </h1>
+                  </>
+                ) : serviceType === 'engagement' ? (
                   <>
                     <h1 
                       className="text-4xl sm:text-6xl lg:text-7xl font-light tracking-wide leading-tight my-2"
@@ -732,11 +821,24 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                 )}
 
                 <div className="flex justify-center items-center gap-1.5 my-3 text-red-500/40">
-                  <Heart className="w-3.5 h-3.5 fill-current" style={{ color: `${primaryColor}60` }} />
+                  {serviceType === 'wedding' && <Heart className="w-3.5 h-3.5 fill-current" style={{ color: `${primaryColor}60` }} />}
+                  {serviceType === 'birthday' && <Cake className="w-3.5 h-3.5" style={{ color: `${primaryColor}60` }} />}
+                  {serviceType === 'babyshower' && <Sparkles className="w-3.5 h-3.5" style={{ color: `${primaryColor}60` }} />}
+                  {serviceType === 'anniversary' && <Heart className="w-3.5 h-3.5 fill-current" style={{ color: `${primaryColor}60` }} />}
+                  {serviceType === 'housewarming' && <Home className="w-3.5 h-3.5" style={{ color: `${primaryColor}60` }} />}
+                  {serviceType === 'engagement' && <Gem className="w-3.5 h-3.5" style={{ color: `${primaryColor}60` }} />}
                 </div>
 
                 <p className="text-[10px] sm:text-[11px] font-semibold tracking-widest text-gray-400 uppercase mb-4">
-                  INVITE YOU TO CELEBRATE {serviceType === 'wedding' ? 'THEIR WEDDING' : 'THIS SPECIAL OCCASION'}
+                  INVITE YOU TO CELEBRATE {
+                    serviceType === 'wedding' ? 'THEIR WEDDING' : 
+                    serviceType === 'birthday' ? 'THE BIRTHDAY' : 
+                    serviceType === 'babyshower' ? 'THE BABY SHOWER' : 
+                    serviceType === 'anniversary' ? 'THE ANNIVERSARY' : 
+                    serviceType === 'housewarming' ? 'THE HOUSEWARMING' : 
+                    serviceType === 'engagement' ? 'THE ENGAGEMENT' : 
+                    'THIS SPECIAL OCCASION'
+                  }
                 </p>
 
                 {/* Structured Split Date (MATCHING SCREENSHOT) */}
@@ -754,19 +856,35 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
               </motion.div>
             </motion.div>
 
-            {/* Standing Bride */}
-            {serviceType === 'wedding' && (
-              <motion.div 
-                style={{ x: brideX, opacity: charactersOpacity }}
-                className="flex absolute right-2 md:right-6 lg:left-auto lg:right-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
-              >
+            {/* Standing Right Character / Decorative Element */}
+            <motion.div 
+              style={{ x: brideX, opacity: charactersOpacity }}
+              className="flex absolute right-2 md:right-6 lg:left-auto lg:right-12 bottom-12 md:bottom-20 z-20 w-24 sm:w-32 md:w-48 lg:w-56 h-[220px] sm:h-[280px] md:h-[400px] lg:h-[480px] items-end justify-center pointer-events-none"
+            >
+              {serviceType === 'wedding' ? (
                 <img 
                   src="/assets/wedding/bride.png" 
                   alt="Bride Illustration" 
                   className="h-full object-contain filter drop-shadow-xl"
                 />
-              </motion.div>
-            )}
+              ) : (
+                <div 
+                  className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center border shadow-xl backdrop-blur-md animate-pulse"
+                  style={{ 
+                    borderColor: `${primaryColor}40`,
+                    backgroundColor: `${backgroundColor}D0`,
+                    color: primaryColor,
+                    boxShadow: `0 10px 25px -5px ${primaryColor}20`
+                  }}
+                >
+                  {serviceType === 'birthday' && <Cake className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2]" />}
+                  {serviceType === 'babyshower' && <Star className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2]" />}
+                  {serviceType === 'anniversary' && <Heart className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2] fill-current" />}
+                  {serviceType === 'housewarming' && <Key className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2]" />}
+                  {serviceType === 'engagement' && <Heart className="w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 stroke-[1.2] fill-current" />}
+                </div>
+              )}
+            </motion.div>
 
             {/* Hugging Couple (Fades in at scroll) */}
             {serviceType === 'wedding' && (
@@ -806,7 +924,7 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
         </div>
       </section>
 
-      {/* 2. WEDDING/EVENT DYNAMIC INTRO STORY SECTION */}
+      {/* 2. DYNAMIC INTRO STORY SECTION */}
       <section className="relative py-24 px-4 bg-white border-b border-gray-100/40">
         <div className="max-w-4xl mx-auto text-center space-y-8">
           
@@ -817,23 +935,41 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
             transition={{ duration: 0.8 }}
             className="flex justify-center flex-col items-center"
           >
-            <Heart className="w-5 h-5 mb-4 stroke-[1.2]" style={{ color: primaryColor }} />
+            {/* Category-Specific Icon */}
+            {serviceType === 'wedding' && <Heart className="w-5 h-5 mb-4 stroke-[1.2]" style={{ color: primaryColor }} />}
+            {serviceType === 'birthday' && <Cake className="w-5 h-5 mb-4 stroke-[1.2]" style={{ color: primaryColor }} />}
+            {serviceType === 'babyshower' && <Sparkles className="w-5 h-5 mb-4 stroke-[1.2]" style={{ color: primaryColor }} />}
+            {serviceType === 'anniversary' && <Heart className="w-5 h-5 mb-4 stroke-[1.2]" style={{ color: primaryColor }} />}
+            {serviceType === 'housewarming' && <Home className="w-5 h-5 mb-4 stroke-[1.2]" style={{ color: primaryColor }} />}
+            {serviceType === 'engagement' && <Gem className="w-5 h-5 mb-4 stroke-[1.2]" style={{ color: primaryColor }} />}
+
             <span 
               className="text-xs uppercase tracking-widest font-semibold text-gray-400 mb-1"
               style={{ fontFamily: fontBody }}
             >
-              ABOUT THE COUPLE
+              {serviceType === 'wedding' && "ABOUT THE COUPLE"}
+              {serviceType === 'birthday' && "THE CELEBRANT"}
+              {serviceType === 'babyshower' && "ABOUT THE PARENTS"}
+              {serviceType === 'anniversary' && "THE CELEBRATED COUPLE"}
+              {serviceType === 'housewarming' && "THE FAMILY"}
+              {serviceType === 'engagement' && "THE ENGAGED COUPLE"}
             </span>
+
             <h2 
               className="text-3xl sm:text-4xl font-light tracking-wide italic"
               style={{ fontFamily: fontSub, color: primaryColor }}
             >
-              Two Souls, One Heart
+              {serviceType === 'wedding' && "Two Souls, One Heart"}
+              {serviceType === 'birthday' && "Celebrating a Milestone Year!"}
+              {serviceType === 'babyshower' && "A Precious Gift Awaits"}
+              {serviceType === 'anniversary' && "Years of Love & Togetherness"}
+              {serviceType === 'housewarming' && "A New Beginning, A Warm Welcome"}
+              {serviceType === 'engagement' && "Two Hearts, One Promise"}
             </h2>
           </motion.div>
 
-          {/* Couple profiles side by side (Wedding only) */}
-          {serviceType === 'wedding' && (
+          {/* Couple profiles side by side (Wedding and Engagement) */}
+          {(serviceType === 'wedding' || serviceType === 'engagement') && (
             <motion.div 
               variants={containerVariants}
               initial="initial"
@@ -851,7 +987,9 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                   {userData.groomName || 'Arjun'}
                 </h3>
                 <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs">
-                  Our journey began with a friendship, blossomed into love, and now we are ready to start our forever.
+                  {serviceType === 'wedding' 
+                    ? "Our journey began with a friendship, blossomed into love, and now we are ready to start our forever."
+                    : "Ready to promise a lifetime of love and companionship as we seal our engagement."}
                 </p>
               </motion.div>
 
@@ -865,7 +1003,113 @@ export default function PublicInvitationClient({ invite }: PublicInvitationClien
                   {userData.brideName || 'Meera'}
                 </h3>
                 <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs">
-                  Two lives, two hearts, joined together in friendship, united forever in love.
+                  {serviceType === 'wedding' 
+                    ? "Two lives, two hearts, joined together in friendship, united forever in love."
+                    : "Walking hand in hand toward a beautiful future starting from this special day."}
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Birthday Host Profile (Birthday) */}
+          {serviceType === 'birthday' && (
+            <motion.div 
+              variants={containerVariants}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+              className="max-w-md mx-auto pt-6"
+            >
+              <motion.div variants={itemVariants} className="flex flex-col items-center space-y-4 bg-white p-8 rounded-3xl border border-gray-100 shadow-xs relative">
+                <div 
+                  className="w-24 h-24 rounded-full flex items-center justify-center border p-2"
+                  style={{ borderColor: `${primaryColor}40`, backgroundColor: `${primaryColor}10` }}
+                >
+                  <Cake className="w-10 h-10 stroke-[1.2]" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="font-light text-2xl tracking-wide font-playfair" style={{ fontFamily: fontHeader, color: primaryColor }}>
+                  {userData.recipientName || userData.name || 'Birthday Host'}
+                </h3>
+                <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs">
+                  We are gathering to celebrate another wonderful year of life, love, and laughter. Your presence is the greatest gift we could ask for!
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Baby Shower Profile (Baby Shower) */}
+          {serviceType === 'babyshower' && (
+            <motion.div 
+              variants={containerVariants}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+              className="max-w-md mx-auto pt-6"
+            >
+              <motion.div variants={itemVariants} className="flex flex-col items-center space-y-4 bg-white p-8 rounded-3xl border border-gray-100 shadow-xs relative">
+                <div 
+                  className="w-24 h-24 rounded-full flex items-center justify-center border p-2"
+                  style={{ borderColor: `${primaryColor}40`, backgroundColor: `${primaryColor}10` }}
+                >
+                  <Sparkles className="w-10 h-10 stroke-[1.2]" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="font-light text-2xl tracking-wide font-playfair" style={{ fontFamily: fontHeader, color: primaryColor }}>
+                  {userData.parentNames || 'Parents-to-Be'}
+                </h3>
+                <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs">
+                  A bundle of joy is on the way! We invite you to join us as we celebrate the upcoming arrival of our little one and share in our parenting journey.
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Anniversary Profile (Anniversary) */}
+          {serviceType === 'anniversary' && (
+            <motion.div 
+              variants={containerVariants}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+              className="max-w-md mx-auto pt-6"
+            >
+              <motion.div variants={itemVariants} className="flex flex-col items-center space-y-4 bg-white p-8 rounded-3xl border border-gray-100 shadow-xs relative">
+                <div 
+                  className="w-24 h-24 rounded-full flex items-center justify-center border p-2"
+                  style={{ borderColor: `${primaryColor}40`, backgroundColor: `${primaryColor}10` }}
+                >
+                  <Heart className="w-10 h-10 stroke-[1.2] fill-current" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="font-light text-2xl tracking-wide font-playfair" style={{ fontFamily: fontHeader, color: primaryColor }}>
+                  {userData.coupleNames || 'The Couple'}
+                </h3>
+                <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs">
+                  Celebrating years of beautiful memories, enduring love, and an unbreakable bond. Join us to toast to our journey and many more years of happiness!
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* Housewarming Profile (Housewarming) */}
+          {serviceType === 'housewarming' && (
+            <motion.div 
+              variants={containerVariants}
+              initial="initial"
+              whileInView="animate"
+              viewport={{ once: true }}
+              className="max-w-md mx-auto pt-6"
+            >
+              <motion.div variants={itemVariants} className="flex flex-col items-center space-y-4 bg-white p-8 rounded-3xl border border-gray-100 shadow-xs relative">
+                <div 
+                  className="w-24 h-24 rounded-full flex items-center justify-center border p-2"
+                  style={{ borderColor: `${primaryColor}40`, backgroundColor: `${primaryColor}10` }}
+                >
+                  <Home className="w-10 h-10 stroke-[1.2]" style={{ color: primaryColor }} />
+                </div>
+                <h3 className="font-light text-2xl tracking-wide font-playfair" style={{ fontFamily: fontHeader, color: primaryColor }}>
+                  {userData.familyName ? `The ${userData.familyName} Family` : 'Our New Nest'}
+                </h3>
+                <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs">
+                  Our dream home is finally a reality, and it wouldn't be complete without the warmth of our friends and family. Join us to bless our new house!
                 </p>
               </motion.div>
             </motion.div>

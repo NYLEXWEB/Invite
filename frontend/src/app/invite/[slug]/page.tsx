@@ -18,7 +18,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     let description = `You are cordially invited to celebrate with us.`;
     
     if (invite.userData) {
-      const host = invite.userData.coupleNames || 
+      const isWish = invite.userData.mode === 'wish';
+      const host = invite.userData.recipientName || 
+                   invite.userData.coupleNames || 
                    invite.userData.name || 
                    (invite.userData.groomName && `${invite.userData.groomName} & ${invite.userData.brideName}`) || 
                    invite.userData.familyName ||
@@ -26,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
                    
       if (host) {
         const typeCapitalized = invite.serviceType.charAt(0).toUpperCase() + invite.serviceType.slice(1);
-        title = `${host}'s ${typeCapitalized} Invitation`;
+        title = isWish ? `Greeting Wish for ${host}` : `${host}'s ${typeCapitalized} Invitation`;
       }
       
       if (invite.userData.message) {
