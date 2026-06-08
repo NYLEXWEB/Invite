@@ -78,26 +78,37 @@ const mongoUri = process.env.MONGODB_URI;
 
 if (!mongoUri) {
   console.error('CRITICAL: MONGODB_URI environment variable is missing.');
-  process.exit(1);
+  if (process.env.VERCEL) {
+    console.warn('Warning: MONGODB_URI is not set in Vercel environment variables.');
+  } else {
+    process.exit(1);
+  }
+} else {
+  mongoose
+    .connect(mongoUri)
+    .then(async () => {
+      console.log('Successfully connected to MongoDB Atlas.');
+      
+      // Seed default templates
+      await seedDefaultTemplates();
+      
+      // Start automatic cleanup background service (only locally, serverless has short lifecycle)
+      if (!process.env.VERCEL) {
+        startCleanupService();
+      }
+    })
+    .catch((err) => {
+      console.error('Failed to connect to MongoDB Atlas:', err);
+    });
 }
 
-mongoose
-  .connect(mongoUri)
-  .then(async () => {
-    console.log('Successfully connected to MongoDB Atlas.');
-    
-    // Seed default templates
-    await seedDefaultTemplates();
-    
-    // Start automatic cleanup background service
-    startCleanupService();
-
-    // Start listening
-    app.listen(PORT, () => {
-      console.log(`[InviteHub Server] Running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode.`);
-    });
-  })
-  .catch((err) => {
-    console.error('Failed to connect to MongoDB Atlas:', err);
-    process.exit(1);
+// Start listening only locally (Vercel handles routing automatically)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`[InviteHub Server] Running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode.`);
   });
+}
+
+// Export the app for Vercel Serverless Functions
+export default app;
+
