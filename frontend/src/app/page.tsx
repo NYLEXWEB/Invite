@@ -4,9 +4,7 @@ import Link from 'next/link';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { 
-  ArrowRight,
-  Play,
-  ArrowUpRight
+  ArrowRight, Play, ArrowUpRight, Sparkles, Zap, Share2, Lock, Gift, Star, ShieldCheck
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -15,7 +13,7 @@ export default function Home() {
     {
       id: 'wedding',
       name: 'Wedding',
-      description: 'Celebrate Love',
+      description: 'Celebrate Eternal Love',
       icon: (
         <svg className="w-10 h-10 stroke-[#C8A96B] fill-none stroke-[1.25]" viewBox="0 0 24 24">
           <circle cx="9" cy="14" r="4.5" />
@@ -27,7 +25,7 @@ export default function Home() {
     {
       id: 'birthday',
       name: 'Birthday',
-      description: 'Make it Special',
+      description: 'Make Memories Shine',
       icon: (
         <svg className="w-10 h-10 stroke-[#C8A96B] fill-none stroke-[1.25]" viewBox="0 0 24 24">
           <path d="M12 4v4M12 4c.3.5.3 1 0 1.5c-.3-.5-.3-1 0-1.5z" />
@@ -40,7 +38,7 @@ export default function Home() {
     {
       id: 'anniversary',
       name: 'Anniversary',
-      description: 'Cherish Moments',
+      description: 'Cherish Every Year',
       icon: (
         <svg className="w-10 h-10 stroke-[#C8A96B] fill-none stroke-[1.25]" viewBox="0 0 24 24">
           <path d="M12 8.5c-1-1.2-2.5-1.8-4-1.8-2.8 0-5 2.2-5 5 0 3.8 4.5 7.2 9 10 4.5-2.8 9-6.2 9-10 0-2.8-2.2-5-5-5-1.5 0-3 .6-4 1.8z" />
@@ -51,7 +49,7 @@ export default function Home() {
     {
       id: 'housewarming',
       name: 'Housewarming',
-      description: 'New Beginnings',
+      description: 'Begin a New Chapter',
       icon: (
         <svg className="w-10 h-10 stroke-[#C8A96B] fill-none stroke-[1.25]" viewBox="0 0 24 24">
           <path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10z" />
@@ -63,7 +61,7 @@ export default function Home() {
     {
       id: 'babyshower',
       name: 'Baby Shower',
-      description: 'Welcome Baby',
+      description: 'Welcome Little Blessings',
       icon: (
         <svg className="w-10 h-10 stroke-[#C8A96B] fill-none stroke-[1.25]" viewBox="0 0 24 24">
           <circle cx="8" cy="19" r="2" />
@@ -77,7 +75,7 @@ export default function Home() {
     {
       id: 'engagement',
       name: 'Engagement',
-      description: 'Future Together',
+      description: 'A Promise of Forever',
       icon: (
         <svg className="w-10 h-10 stroke-[#C8A96B] fill-none stroke-[1.25]" viewBox="0 0 24 24">
           <circle cx="12" cy="15" r="5" />
@@ -94,18 +92,23 @@ export default function Home() {
       
       <main className="flex-grow">
         
-        {/* 1. HERO SECTION */}
+        {/* =======================================================
+           1. PREMIUM HERO SECTION
+           ======================================================= */}
         <section 
-          className="relative overflow-hidden py-20 lg:py-28"
+          className="relative overflow-hidden py-20 lg:py-32"
           style={{ 
             backgroundColor: '#FAF8F5',
-            backgroundImage: 'radial-gradient(circle at 75% 25%, rgba(200, 169, 107, 0.05) 0%, transparent 65%)'
+            backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(200, 169, 107, 0.08) 0%, transparent 60%)'
           }}
         >
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          {/* Subtle gold grid lines in background */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(200,169,107,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(200,169,107,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center">
               
-              {/* Left Column Text Details */}
+              {/* Left Column Details */}
               <div className="lg:col-span-7 flex flex-col items-start space-y-6">
                 
                 {/* Badge */}
@@ -113,10 +116,10 @@ export default function Home() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-[#C8A96B]/30 bg-white px-4 py-1.5 text-[10px] font-semibold tracking-widest text-[#C8A96B] uppercase"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[#C8A96B]/25 bg-white px-4 py-1.5 text-[9px] font-bold tracking-widest text-[#C8A96B] uppercase shadow-xs"
                 >
-                  <span>✨</span>
-                  Create • Share • Celebrate
+                  <Sparkles className="w-3.5 h-3.5" />
+                  CREATE • SHARE • CELEBRATE
                 </motion.div>
 
                 {/* Main Heading */}
@@ -124,10 +127,10 @@ export default function Home() {
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.1 }}
-                  className="font-playfair text-4xl sm:text-5xl lg:text-6xl font-light text-gray-900 leading-[1.12]"
+                  className="font-playfair text-4xl sm:text-5xl lg:text-6.5xl font-light text-gray-900 leading-[1.1]"
                 >
                   Create Beautiful <br />
-                  <span className="text-[#C8A96B]">Invitations</span> in Minutes
+                  <span className="font-playfair font-normal italic tracking-wide text-[#C8A96B]">Digital Cards</span> in Minutes
                 </motion.h1>
 
                 {/* Subtitle */}
@@ -137,8 +140,7 @@ export default function Home() {
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="text-gray-400 font-light text-sm sm:text-base leading-relaxed max-w-lg"
                 >
-                  Design stunning digital invitations for any occasion. <br />
-                  Easy to create, share and remember forever.
+                  Design premium, interactive digital invitations and greeting cards for all life’s precious milestones. Fully responsive, highly customizable, and completely free.
                 </motion.p>
 
                 {/* Buttons */}
@@ -150,96 +152,84 @@ export default function Home() {
                 >
                   <Link
                     href="/create"
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-[#C8A96B] hover:bg-[#b59659] px-7 py-4 text-xs font-semibold uppercase tracking-widest text-white shadow-md transition-all duration-300 group"
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-black hover:bg-[#C8A96B] px-8 py-4 text-xs font-semibold uppercase tracking-widest text-white shadow-lg shadow-black/10 hover:shadow-[#C8A96B]/15 transition-all duration-300 group"
                   >
-                    Create Free Invitation
+                    Start Designing Free
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                   <Link
-                    href="#categories"
-                    className="inline-flex items-center justify-center gap-2.5 rounded-full bg-white hover:bg-gray-50 border border-gray-100 px-6 py-4 text-xs font-semibold uppercase tracking-widest text-gray-700 transition-all duration-300"
+                    href="#how-it-works"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-full bg-white hover:bg-gray-50 border border-gray-150 px-6 py-4 text-xs font-semibold uppercase tracking-widest text-gray-700 transition-all duration-300 shadow-2xs"
                   >
                     <span className="w-6 h-6 rounded-full bg-[#FAF8F5] flex items-center justify-center text-[#C8A96B]">
                       <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
                     </span>
-                    How It Works
+                    See How It Works
                   </Link>
                 </motion.div>
 
-                {/* Four Feature Indicators */}
+                {/* Feature Icons Grid */}
                 <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 1, delay: 0.5 }}
-                  className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 border-t border-gray-200/50 w-full"
+                  className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 border-t border-gray-200/60 w-full"
                 >
-                  <div className="flex gap-3 items-start">
-                    <div className="w-9 h-9 rounded-xl bg-white border border-[#C8A96B]/20 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs">
-                      <svg className="w-4.5 h-4.5 stroke-current fill-none" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="9" />
-                        <path d="M12 8v8M8 12h8" />
-                      </svg>
+                  <div className="flex gap-3 items-start group">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-[#C8A96B]/15 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs group-hover:scale-105 group-hover:border-[#C8A96B]/30 transition-all duration-300">
+                      <Gift className="w-4.5 h-4.5 stroke-[1.5]" />
                     </div>
                     <div>
                       <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-800">100% Free</h4>
-                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">Forever</p>
+                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">No Hidden Costs</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-3 items-start">
-                    <div className="w-9 h-9 rounded-xl bg-white border border-[#C8A96B]/20 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs">
-                      <svg className="w-4.5 h-4.5 stroke-current fill-none" viewBox="0 0 24 24">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                        <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" />
-                      </svg>
+                  <div className="flex gap-3 items-start group">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-[#C8A96B]/15 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs group-hover:scale-105 group-hover:border-[#C8A96B]/30 transition-all duration-300">
+                      <Zap className="w-4.5 h-4.5 stroke-[1.5]" />
                     </div>
                     <div>
-                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-800">Easy to Use</h4>
-                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">No Design Skills</p>
+                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-800">Instant Build</h4>
+                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">No Skills Needed</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-3 items-start">
-                    <div className="w-9 h-9 rounded-xl bg-white border border-[#C8A96B]/20 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs">
-                      <svg className="w-4.5 h-4.5 stroke-current fill-none" viewBox="0 0 24 24">
-                        <circle cx="18" cy="5" r="3" />
-                        <circle cx="6" cy="12" r="3" />
-                        <circle cx="18" cy="19" r="3" />
-                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                      </svg>
+                  <div className="flex gap-3 items-start group">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-[#C8A96B]/15 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs group-hover:scale-105 group-hover:border-[#C8A96B]/30 transition-all duration-300">
+                      <Share2 className="w-4.5 h-4.5 stroke-[1.5]" />
                     </div>
                     <div>
-                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-800">Share Anywhere</h4>
-                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">One Click Sharing</p>
+                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-800">Easy Share</h4>
+                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">WhatsApp & SMS</p>
                     </div>
                   </div>
 
-                  <div className="flex gap-3 items-start">
-                    <div className="w-9 h-9 rounded-xl bg-white border border-[#C8A96B]/20 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs">
-                      <svg className="w-4.5 h-4.5 stroke-current fill-none" viewBox="0 0 24 24">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                      </svg>
+                  <div className="flex gap-3 items-start group">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-[#C8A96B]/15 flex items-center justify-center text-[#C8A96B] shrink-0 shadow-3xs group-hover:scale-105 group-hover:border-[#C8A96B]/30 transition-all duration-300">
+                      <Lock className="w-4.5 h-4.5 stroke-[1.5]" />
                     </div>
                     <div>
-                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-800">Secure & Private</h4>
-                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">Your Data Safe</p>
+                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-gray-800">Private & Safe</h4>
+                      <p className="text-[9px] text-gray-400 font-light mt-0.5 leading-tight">Secure & Monitored</p>
                     </div>
                   </div>
                 </motion.div>
 
               </div>
 
-              {/* Right Column Illustration Card mockup */}
+              {/* Right Column Showcase Mockup */}
               <div className="lg:col-span-5 flex items-center justify-center relative select-none">
-                {/* Floating circle gradient */}
-                <div className="absolute w-[120%] h-[120%] bg-gradient-to-tr from-[#C8A96B]/5 to-transparent blur-3xl -z-10 rounded-full" />
+                <div className="absolute w-[125%] h-[125%] bg-gradient-to-tr from-[#C8A96B]/8 to-transparent blur-3xl -z-10 rounded-full" />
+                
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 1, ease: 'easeOut' }}
-                  className="w-full max-w-[420px] lg:max-w-none shadow-2xl rounded-3xl overflow-hidden border border-white p-2.5 bg-white/40 backdrop-blur-xs"
+                  className="w-full max-w-[440px] lg:max-w-none shadow-2xl rounded-3xl overflow-hidden border border-white p-3 bg-white/40 backdrop-blur-xs hover:scale-101 transition-transform duration-500"
+                  style={{
+                    boxShadow: '0 30px 70px -10px rgba(200, 169, 107, 0.22)'
+                  }}
                 >
                   <img 
                     src="/assets/hero_mockup.png" 
@@ -253,17 +243,19 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. CHOOSE OCCASION SECTION */}
-        <section id="categories" className="py-24 sm:py-28 bg-white scroll-mt-20">
+        {/* =======================================================
+           2. OCCASION SELECTION SECTION
+           ======================================================= */}
+        <section id="categories" className="py-24 sm:py-32 bg-white scroll-mt-20">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             
             {/* Headers and decorative divider */}
-            <div className="text-center max-w-xl mx-auto mb-16 space-y-3">
+            <div className="text-center max-w-xl mx-auto mb-20 space-y-3">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#C8A96B]">
-                Invitations for Every Occasion
+                INVITATIONS & WISHES FOR EVERY OCCASION
               </span>
               <h2 className="font-playfair text-3xl sm:text-4xl font-light text-gray-950">
-                Choose Your Occasion
+                Choose Your Category
               </h2>
               {/* Divider lines with small heart in center */}
               <div className="flex justify-center items-center gap-3 pt-2">
@@ -274,36 +266,39 @@ export default function Home() {
             </div>
 
             {/* Occasion Cards grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
               {categories.map((cat, idx) => (
                 <motion.div
                   key={cat.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: idx * 0.08 }}
+                  transition={{ duration: 0.6, delay: idx * 0.06 }}
                 >
                   <Link
                     href={`/create?type=${cat.id}`}
-                    className="group relative flex flex-col items-center text-center rounded-2xl border border-gray-100 hover:border-[#C8A96B]/30 bg-white p-6 pt-8 pb-7 shadow-3xs hover:shadow-md transition-all duration-300 min-h-[190px]"
+                    className="group relative flex flex-col items-center text-center rounded-2xl border border-gray-100 hover:border-[#C8A96B]/30 bg-white p-6 pt-10 pb-8 shadow-3xs hover:shadow-lg hover:shadow-[#C8A96B]/5 transition-all duration-300 min-h-[200px]"
                   >
+                    {/* Circle back shadow */}
+                    <div className="absolute top-8 w-14 h-14 rounded-full bg-[#FAF8F5] -z-10 group-hover:scale-110 transition-transform duration-300" />
+                    
                     {/* Outline Icon */}
-                    <div className="transition-transform duration-300 group-hover:scale-105 mb-5 shrink-0">
+                    <div className="transition-transform duration-500 group-hover:scale-108 mb-6 shrink-0 relative z-10">
                       {cat.icon}
                     </div>
                     
                     {/* Title */}
-                    <h3 className="font-semibold text-xs text-gray-900 uppercase tracking-wider mb-1">
+                    <h3 className="font-semibold text-xs text-gray-900 uppercase tracking-wider mb-1 relative z-10">
                       {cat.name}
                     </h3>
                     
                     {/* Subtitle */}
-                    <p className="text-[9px] text-gray-400 font-light">
+                    <p className="text-[9px] text-gray-400 font-light relative z-10">
                       {cat.description}
                     </p>
 
                     {/* Bottom-right small circular arrow */}
-                    <div className="absolute bottom-4 right-4 w-6 h-6 rounded-full bg-gray-50 border border-gray-100 group-hover:border-[#C8A96B]/30 flex items-center justify-center text-gray-400 group-hover:text-[#C8A96B] transition-all duration-300">
+                    <div className="absolute bottom-4 right-4 w-6 h-6 rounded-full bg-gray-50 border border-gray-100 group-hover:border-[#C8A96B]/30 flex items-center justify-center text-gray-400 group-hover:text-[#C8A96B] transition-all duration-300 shadow-3xs">
                       <ArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </div>
                   </Link>
@@ -311,6 +306,168 @@ export default function Home() {
               ))}
             </div>
 
+          </div>
+        </section>
+
+        {/* =======================================================
+           3. HOW IT WORKS SECTION (NEW PREMIUM SECTION)
+           ======================================================= */}
+        <section id="how-it-works" className="py-24 sm:py-32 bg-[#FAF8F5]/60 border-y border-gray-100/60 scroll-mt-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            
+            <div className="text-center max-w-xl mx-auto mb-20 space-y-3">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C8A96B]">
+                THREE SIMPLE STEPS
+              </span>
+              <h2 className="font-playfair text-3xl sm:text-4xl font-light text-gray-950">
+                How It Works
+              </h2>
+              <div className="flex justify-center items-center gap-3 pt-1">
+                <div className="w-10 h-[0.75px] bg-[#C8A96B]/40" />
+                <span className="text-[9px] text-[#C8A96B]">✦</span>
+                <div className="w-10 h-[0.75px] bg-[#C8A96B]/40" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+              {/* Step 1 */}
+              <div className="text-center space-y-4 relative group">
+                <div className="w-16 h-16 rounded-full bg-white border border-[#C8A96B]/25 flex items-center justify-center text-xl font-light font-playfair text-[#C8A96B] mx-auto shadow-md group-hover:scale-105 transition-transform duration-300">
+                  01
+                </div>
+                <h3 className="font-semibold text-sm text-gray-900 uppercase tracking-wider">
+                  Fill Details & Purpose
+                </h3>
+                <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs mx-auto">
+                  Choose your category and fill out key details. Select between an interactive RSVP invitation or a stylized greeting card with reply walls.
+                </p>
+                {/* Arrow connector in desktop */}
+                <div className="hidden md:block absolute top-8 left-2/3 w-1/2 h-[0.75px] bg-dashed border-t border-dashed border-[#C8A96B]/30" />
+              </div>
+
+              {/* Step 2 */}
+              <div className="text-center space-y-4 relative group">
+                <div className="w-16 h-16 rounded-full bg-white border border-[#C8A96B]/25 flex items-center justify-center text-xl font-light font-playfair text-[#C8A96B] mx-auto shadow-md group-hover:scale-105 transition-transform duration-300">
+                  02
+                </div>
+                <h3 className="font-semibold text-sm text-gray-900 uppercase tracking-wider">
+                  Pick A Premium Template
+                </h3>
+                <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs mx-auto">
+                  Browse a catalog of designed templates matching your style. Instantly review font sizes, luxury frames, background images, and songs.
+                </p>
+                {/* Arrow connector in desktop */}
+                <div className="hidden md:block absolute top-8 left-2/3 w-1/2 h-[0.75px] bg-dashed border-t border-dashed border-[#C8A96B]/30" />
+              </div>
+
+              {/* Step 3 */}
+              <div className="text-center space-y-4 group">
+                <div className="w-16 h-16 rounded-full bg-white border border-[#C8A96B]/25 flex items-center justify-center text-xl font-light font-playfair text-[#C8A96B] mx-auto shadow-md group-hover:scale-105 transition-transform duration-300">
+                  03
+                </div>
+                <h3 className="font-semibold text-sm text-gray-900 uppercase tracking-wider">
+                  Generate & Share Links
+                </h3>
+                <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xs mx-auto">
+                  Instantly publish your page and generate dynamic links to share directly on WhatsApp. Track RSVPs and wishes directly.
+                </p>
+              </div>
+            </div>
+
+            {/* Bottom Call to Action */}
+            <div className="text-center pt-16">
+              <Link
+                href="/create"
+                className="inline-flex items-center gap-2 rounded-full bg-black hover:bg-[#C8A96B] px-8 py-3.5 text-xs font-semibold uppercase tracking-widest text-white transition-all duration-300 shadow-md"
+              >
+                Create Your Card Now
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+
+          </div>
+        </section>
+
+        {/* =======================================================
+           4. SHOWCASE TESTIMONIAL GALLERY (NEW PREMIUM SECTION)
+           ======================================================= */}
+        <section className="py-24 sm:py-32 bg-white">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            
+            <div className="text-center max-w-xl mx-auto mb-20 space-y-3">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#C8A96B]">
+                CURATED GUEST EXPERIENCES
+              </span>
+              <h2 className="font-playfair text-3xl sm:text-4xl font-light text-gray-950">
+                Loved by Hosts & Guests
+              </h2>
+              <div className="flex justify-center items-center gap-3 pt-1">
+                <div className="w-10 h-[0.75px] bg-[#C8A96B]/40" />
+                <span className="text-[9px] text-[#C8A96B]">★</span>
+                <div className="w-10 h-[0.75px] bg-[#C8A96B]/40" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              
+              {/* Testimonial Card 1 */}
+              <div className="bg-[#FAF8F5]/50 border border-gray-100 rounded-3xl p-8 space-y-6 flex flex-col justify-between hover:scale-101 hover:shadow-md transition-all duration-300">
+                <div className="space-y-4">
+                  <div className="flex text-amber-500 gap-0.5">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
+                  </div>
+                  <p className="text-xs text-gray-500 font-light italic leading-relaxed">
+                    &ldquo;We created our wedding invitation on InviteHub. The animations, luxury background layouts, and dynamic maps blew our guests away. Having RSVPs updated in real-time was incredibly helpful!&rdquo;
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-150">
+                  <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-xs font-bold text-orange-600">SM</div>
+                  <div>
+                    <h4 className="text-[11px] font-bold text-gray-800">Sarah & Mark</h4>
+                    <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">Wedding Card Hosts</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Testimonial Card 2 */}
+              <div className="bg-[#FAF8F5]/50 border border-gray-100 rounded-3xl p-8 space-y-6 flex flex-col justify-between hover:scale-101 hover:shadow-md transition-all duration-300">
+                <div className="space-y-4">
+                  <div className="flex text-amber-500 gap-0.5">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
+                  </div>
+                  <p className="text-xs text-gray-500 font-light italic leading-relaxed">
+                    &ldquo;The new Greeting Wish e-card layout is outstanding. I generated a birthday wish card for my sister; when she opened the wax seal envelope, the chimes played, balloons floated, and she got to see replies from all our friends on the wall.&rdquo;
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-150">
+                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600">AD</div>
+                  <div>
+                    <h4 className="text-[11px] font-bold text-gray-800">Ashley Davis</h4>
+                    <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">Greeting Wish Creator</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Testimonial Card 3 */}
+              <div className="bg-[#FAF8F5]/50 border border-gray-100 rounded-3xl p-8 space-y-6 flex flex-col justify-between hover:scale-101 hover:shadow-md transition-all duration-300">
+                <div className="space-y-4">
+                  <div className="flex text-amber-500 gap-0.5">
+                    {[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
+                  </div>
+                  <p className="text-xs text-gray-500 font-light italic leading-relaxed">
+                    &ldquo;Simple, responsive, and elegant. I created a housewarming invitation card within 5 minutes. The page adapts perfectly on mobile, making sharing it on WhatsApp extremely easy and natural.&rdquo;
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-150">
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-600">RP</div>
+                  <div>
+                    <h4 className="text-[11px] font-bold text-gray-800">Robert Patel</h4>
+                    <span className="text-[8px] uppercase tracking-widest text-gray-400 font-medium">Housewarming Host</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </section>
 

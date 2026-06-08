@@ -78,7 +78,7 @@ export default function AnalyticsDashboard() {
               <p className="text-sm text-red-600 font-medium">{error}</p>
               <button 
                 onClick={() => window.location.reload()}
-                className="mt-4 inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-2C text-xs font-semibold uppercase text-white hover:bg-red-700 transition-colors"
+                className="mt-4 inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-2.5 text-xs font-semibold uppercase text-white hover:bg-red-700 transition-colors"
               >
                 Retry Loading
               </button>
