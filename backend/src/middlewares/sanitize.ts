@@ -27,7 +27,7 @@ function sanitizeInput(data: any): any {
   return data;
 }
 
-export function sanitizeMiddleware(req: Request, res: Response, next: NextFunction) {
+export function sanitizeMiddleware(req: any, res: any, next: any) {
   if (req.body) {
     req.body = sanitizeInput(req.body);
   }
