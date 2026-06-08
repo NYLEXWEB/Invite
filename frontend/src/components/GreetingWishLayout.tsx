@@ -133,7 +133,7 @@ export default function GreetingWishLayout({
   const triggerPopper = () => {
     const chars = ['🎉', '✨', '💖', '🎈', '🌸', '⭐', '🤍'];
     const colors = ['#C8A96B', '#F59E0B', '#EF4444', '#EC4899', '#3B82F6', '#10B981'];
-    const list = [];
+    const list: { id: number; x: number; y: number; char: string; color: string }[] = [];
     for (let i = 0; i < 40; i++) {
       list.push({
         id: Date.now() + i,
