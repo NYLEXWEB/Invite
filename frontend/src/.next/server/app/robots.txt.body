@@ -1,6 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /api/
-Disallow: /invite/
-
-Sitemap: https://invitehub.vercel.app/sitemap.xml
